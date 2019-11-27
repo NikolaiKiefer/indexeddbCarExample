@@ -1,10 +1,62 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+
+import Dexie from 'dexie';
+import {FormControl} from '@angular/forms';
+import {CarDataBase} from '../models/database';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'indexeddbExample';
+  carControlManufacturer = new FormControl();
+  carControlModel = new FormControl();
+  carControlYear = new FormControl();
+  db = new CarDataBase();
+  allCars = [];
+
+  ngOnInit(): void {
+    this.db.version(2).stores({cars: '++id, manufacturer, model, registrationYear'});
+    this.getAllCars();
+    /*db.version(1).stores({contacts: '++id, first, last'});
+    db.version(2).stores({cars: '++id, manufacturer, model, year'});
+    db.table('contacts').put({first: 'first name', last: 'Last name'});
+    db.table('cars').put({manufacturer: 'Audi', model: 'A6', year: 2017});*/
+  }
+
+  createCar() {
+    this.db.cars.put({manufacturer: this.carControlManufacturer.value, model: this.carControlModel.value,
+      registrationYear: this.carControlYear.value});
+    this.getAllCars();
+  }
+
+  searchCar(id: number) {
+    this.db.cars.get(Number(id)).then(searchedCar => {
+      alert(searchedCar.manufacturer + ' ' + searchedCar.model);
+    });
+  }
+
+  searchManufacturer(manufacturerName) {
+this.db.cars.where('manufacturer').equalsIgnoreCase(manufacturerName).each( car => {
+  console.log('Found: ' + car.manufacturer + ' Model : ' + car.model);
+}).catch(error => {
+  console.error(error);
+});
+  }
+
+  getAllCars() {
+    this.allCars = [];
+    this.db.cars.each(car => {
+      this.allCars.push(car);
+    });
+  }
+
+  deleteCar(id) {
+    this.db.cars.delete(id).then( () => {
+      alert('delete succesfull');
+    });
+    this.getAllCars();
+  }
 }
