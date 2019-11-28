@@ -6,26 +6,53 @@
 <!-- * * * * * * * * * Delete the template below * * * * * * * * * * -->
 <!-- * * * * * * * to get started with your project! * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<div>
-  <label>car:</label>
-  <input [formControl]="carControlManufacturer">
-  <label>model:</label>
-  <input [formControl]="carControlModel">
-  <label>year:</label>
-  <input [formControl]="carControlYear">
-  <button (click)="createCar()">Create Car</button>
+<h1>Angular Car Indexeddb Test Application</h1>
+<h2>Car Creation Center</h2>
+<div fxLayout="row" fxLayoutGap="10px" style="background-color: rgba(204, 210, 219, 0.3); margin-left: 20px; margin-right: 20px">
+  <mat-form-field style="padding-left: 10px" fxFlex="25">
+    <mat-label>car:</mat-label>
+      <input matInput [formControl]="carControlManufacturer">
+    </mat-form-field>
+  <mat-form-field fxFlex="25">
+    <mat-label>model:</mat-label>
+    <input matInput [formControl]="carControlModel">
+  </mat-form-field>
+  <mat-form-field fxFlex="25">
+    <mat-label>year:</mat-label>
+    <input matInput [formControl]="carControlYear">
+  </mat-form-field>
+  <button fxFlex="25" mat-raised-button color="primary" (click)="createCar()">Create Car</button>
 </div>
-<div>
-  <label>carsearch:</label>
-  <input (keyup.enter)="searchCar($event.target.value)">
-  <label>manufacturer search:</label>
-  <input (keyup.enter)="searchManufacturer($event.target.value)">
+<h2>Car Search Center</h2>
+<div fxLayout="row" fxLayoutGap="10px" style="background-color: rgba(204, 210, 219, 0.3); margin-left: 20px; margin-right: 20px">
+  <mat-form-field fxFlex="25" style="padding-left: 10px">
+  <mat-label>carsearch:</mat-label>
+  <input matInput (keyup.enter)="searchCar($event.target.value)">
+  </mat-form-field>
+  <div fxFlex="25"></div>
+  <mat-form-field fxFlex="25">
+  <mat-label>manufacturer search:</mat-label>
+  <input matInput (keyup.enter)="searchManufacturer($event.target.value)">
+  </mat-form-field>
 </div>
-<div>
+<h2>Found Cars:</h2>
+<div *ngFor="let car of foundCar" fxLayout="row">
+  <p fxFlex="30">{{car.manufacturer}}</p>
+  <p fxFlex="30">{{car.model}}</p>
+  <p fxFlex="30">{{car.registrationYear}}</p>
+</div>
+<h2>Car Database</h2>
+<div fxLayout="column">
   <div *ngFor="let car of allCars">
-    <p>{{car.manufacturer}} {{car.model }} {{car.registrationYear}}</p>
-    <button mat-button="primary" (click)="deleteCar(car.id)">Delete {{car.model}}</button>
-  </div>
+    <mat-divider></mat-divider>
+    <div fxLayout="row" fxLayoutGap="30px">
+      <div fxFlex="5"></div>
+    <p fxFlex="10">{{car.manufacturer}}</p>
+    <p fxFlex="10">{{car.model }}</p>
+    <p fxFlex="10">{{car.registrationYear}}</p>
+    <button fxFlex="25" mat-flat-button color="warn" (click)="deleteCar(car.id)">Delete {{car.model}}</button>
+    </div>
+    </div>
 </div>
 <!--style>
   :host {

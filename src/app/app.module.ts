@@ -5,6 +5,8 @@ import { AppComponent } from './app.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AppStyleModule} from './app-style.module';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {MatDividerModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import {AppStyleModule} from './app-style.module';
     AppStyleModule,
     BrowserModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    MatDividerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

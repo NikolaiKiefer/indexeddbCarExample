@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   carControlYear = new FormControl();
   db = new CarDataBase();
   allCars = [];
+  foundCar = [];
 
   ngOnInit(): void {
     this.db.version(2).stores({cars: '++id, manufacturer, model, registrationYear'});
@@ -33,14 +34,16 @@ export class AppComponent implements OnInit {
   }
 
   searchCar(id: number) {
+    this.foundCar = [];
     this.db.cars.get(Number(id)).then(searchedCar => {
-      alert(searchedCar.manufacturer + ' ' + searchedCar.model);
+      this.foundCar.push(searchedCar);
     });
   }
 
   searchManufacturer(manufacturerName) {
-this.db.cars.where('manufacturer').equalsIgnoreCase(manufacturerName).each( car => {
-  console.log('Found: ' + car.manufacturer + ' Model : ' + car.model);
+    this.foundCar = [];
+    this.db.cars.where('manufacturer').equalsIgnoreCase(manufacturerName).each( car => {
+  this.foundCar.push(car);
 }).catch(error => {
   console.error(error);
 });
