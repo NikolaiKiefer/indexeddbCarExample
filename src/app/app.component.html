@@ -24,7 +24,7 @@
 <div>
   <div *ngFor="let car of allCars">
     <p>{{car.manufacturer}} {{car.model }} {{car.registrationYear}}</p>
-    <button (click)="deleteCar(car.id)">Delete {{car.model}}</button>
+    <button mat-button="primary" (click)="deleteCar(car.id)">Delete {{car.model}}</button>
   </div>
 </div>
 <!--style>
