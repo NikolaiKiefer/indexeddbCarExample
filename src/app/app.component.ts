@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
 import Dexie from 'dexie';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {CarDataBase} from '../models/database';
 
 @Component({
@@ -10,10 +10,11 @@ import {CarDataBase} from '../models/database';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'indexeddbExample';
-  carControlManufacturer = new FormControl();
-  carControlModel = new FormControl();
-  carControlYear = new FormControl();
+  carFormGroup = new FormGroup({
+    carControlManufacturer: new FormControl( '', Validators.required),
+    carControlModel: new FormControl( '', Validators.required),
+    carControlYear: new FormControl( '', Validators.required)
+  });
   db = new CarDataBase();
   allCars = [];
   foundCar = [];
@@ -28,9 +29,14 @@ export class AppComponent implements OnInit {
   }
 
   createCar() {
-    this.db.cars.put({manufacturer: this.carControlManufacturer.value, model: this.carControlModel.value,
-      registrationYear: this.carControlYear.value});
-    this.getAllCars();
+    if (this.carFormGroup.valid) {
+      this.db.cars.put({
+        manufacturer: this.carFormGroup.controls.carControlManufacturer.value,
+        model: this.carFormGroup.controls.carControlModel.value,
+        registrationYear: this.carFormGroup.controls.carControlYear.value
+      });
+      this.getAllCars();
+    }
   }
 
   searchCar(id: number) {
@@ -42,11 +48,11 @@ export class AppComponent implements OnInit {
 
   searchManufacturer(manufacturerName) {
     this.foundCar = [];
-    this.db.cars.where('manufacturer').equalsIgnoreCase(manufacturerName).each( car => {
-  this.foundCar.push(car);
-}).catch(error => {
-  console.error(error);
-});
+    this.db.cars.where('manufacturer').equalsIgnoreCase(manufacturerName).each(car => {
+      this.foundCar.push(car);
+    }).catch(error => {
+      console.error(error);
+    });
   }
 
   getAllCars() {
@@ -57,7 +63,7 @@ export class AppComponent implements OnInit {
   }
 
   deleteCar(id) {
-    this.db.cars.delete(id).then( () => {
+    this.db.cars.delete(id).then(() => {
       alert('delete succesfull');
     });
     this.getAllCars();
